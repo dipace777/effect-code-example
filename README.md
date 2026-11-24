@@ -9,7 +9,8 @@ bun install
 To run:
 
 ```bash
-bun run examples/retry-and-fallback.ts
+bun examples/retry-and-fallback.ts
+bun examples/cluster.ts
 ```
 
 To type check:

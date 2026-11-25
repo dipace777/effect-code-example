@@ -47,7 +47,7 @@ const callWithRetry = (baseUrl: string, model: Model, prompt: string) =>
     Effect.retry({
       while: isRetryable,
       times: 3,
-      schedule: Schedule.exponential("100 millis"),
+      schedule: Schedule.exponential("100 millis").pipe(Schedule.jittered),
     }),
   );
 

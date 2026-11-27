@@ -44,6 +44,11 @@ const program2 = Effect.gen(function* () {
   const facebookPageAnalytics = yield* facebook.analytics.getPageAnalytics(
     "FACEBOOK_PAGE_ID",
     facebookToken,
+    {
+      since: "2026-01-01",
+      until: "2026-03-31",
+      period: "day",
+    },
   );
 
   return {

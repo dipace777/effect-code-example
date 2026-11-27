@@ -1,8 +1,12 @@
 import { Effect } from "effect";
 
 import { HttpClient, HttpClientResponse } from "effect/http";
+import { FACEBOOK_PAGE_INSIGHT_METRICS } from "./constants";
 import {
+  FacebookPageInsightsResponseSchema,
   FacebookPostsResponseSchema,
+  type FacebookPageAnalyticsQuery,
+  type FacebookPageInsight,
   type FacebookPost,
 } from "./facebook-types";
 
@@ -10,19 +14,23 @@ export const facebookAnalyticsApi = (http: HttpClient.HttpClient) => ({
   getPageAnalytics: (
     pageId: string,
     accessToken: string,
-  ): Effect.Effect<ReadonlyArray<FacebookPost>, Error> =>
+    query: FacebookPageAnalyticsQuery,
+  ): Effect.Effect<ReadonlyArray<FacebookPageInsight>, Error> =>
     http
       .get(`/${pageId}/insights`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
         urlParams: {
-          fields: "id,message,created_time",
+          metric: FACEBOOK_PAGE_INSIGHT_METRICS.join(","),
+          period: query.period,
+          since: query.since,
+          until: query.until,
         },
       })
       .pipe(
         Effect.flatMap(
-          HttpClientResponse.schemaBodyJson(FacebookPostsResponseSchema),
+          HttpClientResponse.schemaBodyJson(FacebookPageInsightsResponseSchema),
         ),
         Effect.map((response) => response.data),
       ),
